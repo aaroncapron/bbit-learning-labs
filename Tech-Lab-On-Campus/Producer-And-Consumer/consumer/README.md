@@ -15,7 +15,7 @@ Below are bullet points of the criteria:
 - startConsuming:  Consumer should start listening for messages from the queue.
 - Del: Close Connection and Channel.
 
-
+#Aaron Here
 ## Testing
 In order to verify that the consumer class was properly instantiated, we will use the provided  `consume.py`, file. Follow the below instructions:
 1. Start consumer
