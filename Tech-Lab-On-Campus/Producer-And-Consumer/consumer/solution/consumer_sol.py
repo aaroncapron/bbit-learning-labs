@@ -10,29 +10,29 @@ class mqConsumer(mqConsumerInterface):
         self.exchange_name = exchange_name
         self.queue_name = queue_name
         self.setupRMQConnection()
-        pass
+        
 
     def setupRMQConnection(self) -> None:
         # Set-up Connection to RabbitMQ service
-        con_params = pika.URLParameters(os.environ["AMQP_URL"])
-        connection = pika.BlockingConnection(parameters=con_params)
+        self.con_params = pika.URLParameters(os.environ["AMQP_URL"])
+        self.connection = pika.BlockingConnection(parameters=self.con_params)
         # Establish Channel
-        channel = connection.channel()
+        self.channel = self.connection.channel()
         # Create Queue if not already present
-        channel.queue_declare(queue="Queue Name")
+        self.channel.queue_declare(queue=self.queue_name)
         # Create the exchange if not already present
-        exchange = channel.exchange_declare(exchange="Exchange Name")
+        self.exchange = self.channel.exchange_declare(exchange=self.exchange_name)
         # Bind Binding Key to Queue on the exchange
-        channel.queue_bind(
-            queue= "Queue Name",
-            routing_key= "Routing Key",
-            exchange="Exchange Name",
+        self.channel.queue_bind(
+            queue= self.queue_name,
+            routing_key= self.binding_key,
+            exchange= self.exchange_name,
         )
         # Set-up Callback function for receiving messages
-        channel.basic_consume(
+        self.channel.basic_consume(
             "Queue Name", self.on_message_callback, auto_ack=False
         )
-        pass
+
 
     def on_message_callback(
         self, channel, method_frame, header_frame, body
@@ -41,14 +41,12 @@ class mqConsumer(mqConsumerInterface):
         channel.basic_ack(method_frame.delivery_tag, False)
         #Print message (The message is contained in the body parameter variable)
         print("Consumer Message: {1}".format(body))
-        pass
 
     def startConsuming(self) -> None:
         # Print " [*] Waiting for messages. To exit press CTRL+C"
         print("Awaiting Messages. To exit press CTRL + C")
         # Start consuming messages
         self.channel.start_consuming()
-        pass
     
     def __del__(self) -> None:
         # Print "Closing RMQ connection on destruction"
@@ -57,4 +55,4 @@ class mqConsumer(mqConsumerInterface):
         self.channel.close()
         # Close Connection
         self.connection.close()
-        pass
+ 
