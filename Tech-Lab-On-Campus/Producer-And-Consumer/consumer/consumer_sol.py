@@ -40,7 +40,7 @@ class mqConsumer(mqConsumerInterface):
         # Acknowledge message
         channel.basic_ack(method_frame.delivery_tag, False)
         #Print message (The message is contained in the body parameter variable)
-        print(body)
+        print("Consumer Message: {1}".format(body))
         pass
 
     def startConsuming(self) -> None:
