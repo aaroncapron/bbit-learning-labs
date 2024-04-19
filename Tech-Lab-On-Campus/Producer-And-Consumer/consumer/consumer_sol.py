@@ -9,7 +9,7 @@ class mqConsumer(mqConsumerInterface):
         self.binding_key = binding_key
         self.exchange_name = exchange_name
         self.queue_name = queue_name
-        self.setupRMQCOnnection()
+        self.setupRMQConnection()
         pass
 
     def setupRMQConnection(self) -> None:
@@ -45,15 +45,16 @@ class mqConsumer(mqConsumerInterface):
 
     def startConsuming(self) -> None:
         # Print " [*] Waiting for messages. To exit press CTRL+C"
-
+        print("Awaiting Messages. To exit press CTRL + C")
         # Start consuming messages
+        self.channel.start_consuming()
         pass
     
     def __del__(self) -> None:
         # Print "Closing RMQ connection on destruction"
-        
+        print("Closing RMQ connection on destruction")
         # Close Channel
-
+        self.channel.close()
         # Close Connection
-        
+        self.connection.close()
         pass
