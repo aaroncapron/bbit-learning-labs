@@ -18,7 +18,7 @@ class mqProducer(mqProducerInterface):
         # Establish Channel
         self.channel = connection.channel()
 
-            # Create the exchange if not already present
+        # Create the exchange if not already present
         exchange = self.channel.exchange_declare(exchange="Exchange Name")
     
         pass
